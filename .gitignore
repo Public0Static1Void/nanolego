@@ -1,10 +1,7 @@
-# Created by https://www.toptal.com/developers/gitignore/api/unity
-# Edit at https://www.toptal.com/developers/gitignore?templates=unity
-
-### Unity ###
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+#
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -71,9 +68,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 
 # Temporary auto-generated Android Assets
-[Aa]ssets/[Ss]treamingAssets/aa.meta
-[Aa]ssets/[Ss]treamingAssets/aa/*
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
 [Ll]ibrary/
-[Tt]emp/
-
-# End of https://www.toptal.com/developers/gitignore/api/unity
