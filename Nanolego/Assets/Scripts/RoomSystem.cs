@@ -12,7 +12,7 @@ public class RoomSystem : MonoBehaviour
     public List<Transform> rooms_transform;
     public int current_room = 0;
 
-
+    [SerializeField] private Transform player;
     private void Awake()
     {
         if (instance == null)
@@ -23,8 +23,8 @@ public class RoomSystem : MonoBehaviour
     void Update()
     {
         room_text.text = "Room: " + current_room.ToString();
-        bool btn_pressed = rightHandButtons.action.ReadValue<bool>();
-        if (btn_pressed)
+        float btn_pressed = rightHandButtons.action.ReadValue<float>();
+        if (btn_pressed > 0.1f)
             current_room++;
     }
 
@@ -34,6 +34,8 @@ public class RoomSystem : MonoBehaviour
         {
             if (current_room < rooms_transform.Count)
                 current_room++;
+
+            transform.position = rooms_transform[current_room].position;
         }
     }
     public void DecreaseRoom(InputAction.CallbackContext con)
@@ -42,6 +44,8 @@ public class RoomSystem : MonoBehaviour
         {
             if (current_room > 0)
                 current_room--;
+
+            transform.position = rooms_transform[current_room].position;
         }
     }
 }

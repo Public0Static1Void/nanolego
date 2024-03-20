@@ -19,6 +19,9 @@ public class AnimateHandOnInput : MonoBehaviour
     [SerializeField] private TMP_Text grip_text;
     [SerializeField] private TMP_Text room_text;
 
+    public float triggerValue;
+    public float gripValue;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,11 +31,11 @@ public class AnimateHandOnInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float triggerValue = pinchAnimationAction.action.ReadValue<float>();
+        triggerValue = pinchAnimationAction.action.ReadValue<float>();
         handAnimator.SetFloat("Trigger", triggerValue);
         trigger_text.text = "Trigger:" + triggerValue.ToString();
 
-        float gripValue = gripAnimationAction.action.ReadValue<float>();
+        gripValue = gripAnimationAction.action.ReadValue<float>();
         handAnimator.SetFloat("Grip", gripValue);
         grip_text.text = "Grip: " + gripValue.ToString();
 
