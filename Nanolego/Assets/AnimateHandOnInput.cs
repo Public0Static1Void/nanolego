@@ -39,13 +39,11 @@ public class AnimateHandOnInput : MonoBehaviour
         handAnimator.SetFloat("Grip", gripValue);
         grip_text.text = "Grip: " + gripValue.ToString();
 
-        if (room_text != null )
-            room_text.text = "Room: " + curr_pos.ToString();
 
-        if (triggerValue == 1)
+        /*if (triggerValue == 1)
             RoomSystem.instance.current_room++;
 
-        /*if (triggerValue > 0.9f && !activated)
+        if (triggerValue > 0.9f && !activated)
         {
             if (curr_pos < positions.Count)
                 curr_pos++;
