@@ -40,7 +40,7 @@ public class RoomSystem : MonoBehaviour
 
     private void MovePlayer()
     {
-        transform.parent.position = rooms_transform[current_room].position;
+        transform.position = rooms_transform[current_room].position;
         /*while (transform.position != rooms_transform[current_room].position)
         {
             Vector3.Lerp(transform.position, rooms_transform[current_room].position, 5);
