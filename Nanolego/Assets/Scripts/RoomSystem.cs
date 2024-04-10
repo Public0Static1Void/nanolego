@@ -14,6 +14,10 @@ public class RoomSystem : MonoBehaviour
 
     [SerializeField] private Transform player;
 
+    // Speed
+    [Header("Speed")]
+    [SerializeField] private float speed;
+
     private bool move = false;
 
     private void Start()
@@ -30,14 +34,18 @@ public class RoomSystem : MonoBehaviour
 
         if (move)
         {
+            /// Distancia hasta el objetivo
             float distance = Vector3.Distance(transform.position, rooms_transform[current_room].position);
-
+            /// Aquí se mueve arriba o abajo, dependiendo de si el objetivo está arriba, o, abajo
             if (rooms_transform[current_room].position.y > transform.position.y && distance > 0.1f)
-                transform.Translate(transform.up * 5 * Time.deltaTime);
+                transform.Translate(transform.up * speed * Time.deltaTime);
             else if (distance > 0.1f)
-                transform.Translate(transform.up * -5 * Time.deltaTime);
+                transform.Translate(transform.up * -speed * Time.deltaTime);
             else if (distance < 0.1f)
+            {
+                PlayerMovement.Instance.canMove = true;
                 move = false;
+            }
         }
     }
     public void IncreaseRoom(InputAction.CallbackContext con)
@@ -67,19 +75,7 @@ public class RoomSystem : MonoBehaviour
 
     private void MovePlayer()
     {
-        //transform.position = rooms_transform[current_room].position;
-        /*while (transform.position != rooms_transform[current_room].position)
-        {
-            Vector3.Lerp(transform.position, rooms_transform[current_room].position, 5);
-        }*/
-
-        StartCoroutine(WaitToFalse());
-    }
-
-    private IEnumerator WaitToFalse()
-    {
         move = true;
-        yield return new WaitForSeconds(3);
-        move = false;
+        PlayerMovement.Instance.canMove = false;
     }
 }
