@@ -17,8 +17,8 @@ public class PlayerMovement : MonoBehaviour
     {
         chController.Move(new Vector3 (Input.GetAxis("Horizontal") * speed * transform.forward.x, 0, 
                                         Input.GetAxis("Vertical") * speed * transform.forward.y));
-        Debug.Log("Horizontal: " + Input.GetAxis("Horizontal"));
-        Debug.Log("Vertical: " + Input.GetAxis("Vertical"));
+        //Debug.Log("Horizontal: " + Input.GetAxis("Horizontal"));
+        //Debug.Log("Vertical: " + Input.GetAxis("Vertical"));
     }
     public void Move(InputAction.CallbackContext con)
     {
