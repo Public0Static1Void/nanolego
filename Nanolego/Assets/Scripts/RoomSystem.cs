@@ -26,6 +26,7 @@ public class RoomSystem : MonoBehaviour
     }
     private void Update()
     {
+        /*
         Debug.Log("Move: " + move + ", room: " + current_room);
         Debug.Log(rooms_transform[current_room]);
         if (Input.GetKeyDown(KeyCode.E))
@@ -46,7 +47,7 @@ public class RoomSystem : MonoBehaviour
                 PlayerMovement.Instance.canMove = true;
                 move = false;
             }
-        }
+        }*/
     }
     public void IncreaseRoom(InputAction.CallbackContext con)
     {
@@ -75,7 +76,8 @@ public class RoomSystem : MonoBehaviour
 
     private void MovePlayer()
     {
-        move = true;
-        PlayerMovement.Instance.canMove = false;
+        transform.position = rooms_transform[current_room].position;
+        //move = true;
+        //PlayerMovement.Instance.canMove = false;
     }
 }
