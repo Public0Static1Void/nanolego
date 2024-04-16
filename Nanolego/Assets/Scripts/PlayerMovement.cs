@@ -31,8 +31,10 @@ public class PlayerMovement : MonoBehaviour
         if (!canMove)
             return;
 
+        transform.rotation = new Quaternion(transform.rotation.x, Camera.main.transform.rotation.y, transform.rotation.z, transform.rotation.w);
+
         transform.Translate(new Vector3(Input.GetAxis("Horizontal") * speed * transform.right.x, 0,
-                                        Input.GetAxis("Vertical") * speed * transform.forward.z));
+                                        Input.GetAxis("Vertical") * speed * -transform.forward.z));
 
         Debug.Log("Horizontal: " + Input.GetAxis("Horizontal"));
         Debug.Log("Vertical: " + Input.GetAxis("Vertical"));
