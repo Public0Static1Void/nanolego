@@ -33,12 +33,16 @@ public class SelectScript : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                Debug.DrawLine(transform.position, hit.point, Color.green);
                 if (hit.transform.gameObject.layer != pickableMask)
                     return;
                 Debug.Log(hit.transform.gameObject.name);
                 ob = hit.transform;
                 objectSelected = true;
             }
+            else
+                Debug.DrawLine(transform.position, transform.forward, Color.blue);
+
         }
     }
 }
