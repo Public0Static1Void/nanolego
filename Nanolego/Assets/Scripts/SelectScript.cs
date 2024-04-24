@@ -32,10 +32,10 @@ public class SelectScript : MonoBehaviour
 
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            mirilla.position = hit.point;
+            if (hit.transform.tag != "Player")
+                mirilla.position = hit.point;
             if (hit.transform.tag == pickableTag)
             {
-
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     ob = hit.transform;
