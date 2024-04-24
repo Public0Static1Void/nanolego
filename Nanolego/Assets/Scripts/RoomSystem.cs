@@ -27,6 +27,8 @@ public class RoomSystem : MonoBehaviour
         {
             if (current_room < rooms_transform.Count - 1)
                 current_room++;
+            else
+                return;
 
             Debug.Log("Room: " + current_room.ToString());
 
@@ -39,8 +41,11 @@ public class RoomSystem : MonoBehaviour
         {
             if (current_room > 0)
                 current_room--;
+            else
+                return;
 
             Debug.Log("Room: " + current_room.ToString());
+
 
             MovePlayer();
         }

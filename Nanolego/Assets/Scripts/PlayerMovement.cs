@@ -9,8 +9,12 @@ public class PlayerMovement : MonoBehaviour
 
     public bool canMove;
 
+    [Header("Movimiento")]
     [SerializeField] private float speed;
-    private CharacterController chController;
+    [SerializeField] private float turn_speed;
+    private Rigidbody rb;
+
+    [SerializeField] private Transform main_camera;
 
     private void Awake()
     {
@@ -21,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Start()
     {
-        chController = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
 
         canMove = true;
     }
@@ -31,12 +35,11 @@ public class PlayerMovement : MonoBehaviour
         if (!canMove)
             return;
 
+        Vector3 moveDirection = Vector3.ProjectOnPlane(main_camera.transform.forward, Vector3.up).normalized;
+        Vector3 moveVector = moveDirection * Input.GetAxis("Vertical") * speed;
+        rb.MovePosition(transform.position + moveVector);
 
-        transform.Translate(new Vector3(Input.GetAxis("Horizontal") * speed * transform.right.x, 0,
-                                        Input.GetAxis("Vertical") * speed * transform.forward.z));
-
-        //Debug.Log("Horizontal: " + Input.GetAxis("Horizontal"));
-        //Debug.Log("Vertical: " + Input.GetAxis("Vertical"));
+        transform.Rotate(transform.up * Input.GetAxis("Horizontal") * turn_speed);
     }
     public void Move(InputAction.CallbackContext con)
     {
@@ -44,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector2 dir = con.action.ReadValue<Vector2>();
             Debug.Log(dir);
-            chController.Move(dir * speed);
         }
     }
 }
