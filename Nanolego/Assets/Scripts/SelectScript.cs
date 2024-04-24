@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -9,25 +11,63 @@ public class SelectScript : MonoBehaviour
     private bool objectSelected = false;
     private Transform ob;
 
-    [SerializeField] private LayerMask pickableMask;
+    [SerializeField] private string pickableTag;
 
-    public Transform ray_origin; // Reference to the XRController
+    [SerializeField] private TMP_Text name_text;
+
+    [SerializeField] private float range;
+
+    [SerializeField] private Transform mirilla;
+
+    private List<Transform> objectsOnZone;
+
+    private void Start()
+    {
+        objectsOnZone = new List<Transform>();
+    }
 
     private void FixedUpdate()
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(ray_origin.position, ray_origin.forward, out hit, 10f))
-            Debug.DrawLine(ray_origin.position, ray_origin.forward, Color.green);
-        else
-            Debug.DrawLine(ray_origin.position, ray_origin.forward, Color.blue);
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        {
+            mirilla.position = hit.point;
+            if (hit.transform.tag == pickableTag)
+            {
 
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    ob = hit.transform;
+                    objectSelected = true;
+                }
+            }
+        }
 
         if (!objectSelected)
             return;
 
+        if (Input.GetKeyDown(KeyCode.F))
+            objectSelected = false;
+
         ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
         ob.rotation = transform.rotation;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.tag == pickableTag)
+        {
+            objectsOnZone.Add(other.transform);
+            name_text.text = other.name;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.tag == pickableTag)
+        {
+            objectsOnZone.Remove(other.transform);
+        }
     }
     public void GetSelectedObject(InputAction.CallbackContext con)
     {
@@ -38,22 +78,46 @@ public class SelectScript : MonoBehaviour
                 objectSelected = false;
                 return;
             }
+            /*
+            foreach (Transform t in objectsOnZone)
+            {
+                ob = t;
+                if (Vector3.Distance(transform.position, ob.position) > Vector3.Distance(transform.position, t.position))
+                {
+                    ob = t;
+                }
+            }
+
+            if (ob != null)
+            {
+                objectSelected = true;
+                name_text.text = ob.name;
+            }
+            */
+
+            name_text.text = "si";
 
             RaycastHit hit;
 
-            if (Physics.Raycast(ray_origin.position, ray_origin.forward, out hit, 10f))
+            if (Physics.Raycast(transform.position, transform.forward, out hit))
             {
-                Debug.DrawLine(transform.position, hit.point, Color.green);
+                name_text.text = hit.transform.name + ", " + hit.transform.tag;
 
-                Debug.Log(hit.transform.gameObject.name);
-
-                if (hit.transform.gameObject.layer != 7)
+                if (hit.transform.tag != pickableTag || Vector3.Distance(transform.position, hit.transform.position) > range)
                     return;
 
-                ob = hit.transform;
-                objectSelected = true;
-            }
+                name_text.text = hit.transform.name;
 
+                objectSelected = true;
+
+                ob = hit.transform;
+            }
         }
     }
+
+    /*private void OnDrawGizmos()
+    {
+        if (Selection.activeObject == this.gameObject)
+            Gizmos.DrawWireSphere(transform.position, range);
+    }*/
 }

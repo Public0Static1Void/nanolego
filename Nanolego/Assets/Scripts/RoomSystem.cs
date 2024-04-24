@@ -16,26 +16,11 @@ public class RoomSystem : MonoBehaviour
     [Header("Speed")]
     [SerializeField] private float speed;
 
-    private bool move = false;
-
     private void Start()
     {
         current_room = 0;
     }
-    private void Update()
-    {
-        /*
-        if (!move)
-            return;
 
-        if (Vector3.Distance(transform.position, rooms_transform[current_room].position) < 0.05f)
-        {
-            PlayerMovement.Instance.canMove = true;
-            move = true;
-        }
-
-        transform.position = Vector3.Lerp(transform.position, rooms_transform[current_room].position, Time.deltaTime);*/
-    }
     public void IncreaseRoom(InputAction.CallbackContext con)
     {
         if (con.performed)
