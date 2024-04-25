@@ -47,8 +47,6 @@ public class SelectScript : MonoBehaviour
         if (!objectSelected)
             return;
 
-        if (Input.GetKeyDown(KeyCode.F))
-            objectSelected = false;
 
         ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
         ob.rotation = transform.rotation;
@@ -75,6 +73,7 @@ public class SelectScript : MonoBehaviour
         {
             if (objectSelected)
             {
+                ob.GetComponent<Collider>().enabled = true;
                 objectSelected = false;
                 return;
             }
@@ -95,8 +94,6 @@ public class SelectScript : MonoBehaviour
             }
             */
 
-            name_text.text = "si";
-
             RaycastHit hit;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit))
@@ -109,6 +106,8 @@ public class SelectScript : MonoBehaviour
                 name_text.text = hit.transform.name;
 
                 objectSelected = true;
+
+                hit.transform.GetComponent<Collider>().enabled = false;
 
                 ob = hit.transform;
             }
