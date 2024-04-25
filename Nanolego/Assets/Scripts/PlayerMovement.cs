@@ -35,11 +35,17 @@ public class PlayerMovement : MonoBehaviour
         if (!canMove)
             return;
 
+        float xInput = Input.GetAxis("Horizontal");
+        float yInput = Input.GetAxis("Vertical");
+
+        if (xInput == 0 && yInput == 0)
+            rb.angularVelocity = Vector3.zero;
+
         Vector3 moveDirection = Vector3.ProjectOnPlane(main_camera.transform.forward, Vector3.up).normalized;
-        Vector3 moveVector = moveDirection * Input.GetAxis("Vertical") * speed;
+        Vector3 moveVector = moveDirection * yInput * speed;
         rb.MovePosition(transform.position + moveVector);
 
-        transform.Rotate(transform.up * Input.GetAxis("Horizontal") * turn_speed);
+        transform.Rotate(transform.up * xInput * turn_speed);
     }
     public void Move(InputAction.CallbackContext con)
     {
