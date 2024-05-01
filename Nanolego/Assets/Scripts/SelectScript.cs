@@ -54,9 +54,6 @@ public class SelectScript : MonoBehaviour
             }
         }
 
-        if (door_parent != null)
-            Debug.Log(Vector3.Angle(door_parent.position, transform.position));
-
         if (!objectSelected && !door)
             return;
 
@@ -67,16 +64,16 @@ public class SelectScript : MonoBehaviour
         }
         else if (door)
         {
-            Vector3 dir = -door_parent.transform.GetChild(0).transform.position + transform.position;
-            dir.y = 0;
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 directionToPlayer = transform.position - door_parent.transform.position;
+            directionToPlayer.y = 0f; // Ignore vertical component
 
-            Quaternion a = new Quaternion(lookRotation.x / 2, lookRotation.y / 2, lookRotation.z / 2, lookRotation.w / 2);
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
 
+            Quaternion yRotation = Quaternion.Euler(door_parent.transform.rotation.eulerAngles.x, targetRotation.eulerAngles.y / 2 - 10f, door_parent.transform.rotation.eulerAngles.z);
 
-            if (Quaternion.Angle(door_parent.transform.rotation, lookRotation) > 90)
+            if (Quaternion.Angle(door_parent.transform.rotation, yRotation) > 0.1f)
             {
-                door_parent.transform.rotation = Quaternion.RotateTowards(door_parent.transform.rotation, lookRotation, Time.deltaTime * 50);
+                door_parent.transform.rotation = Quaternion.RotateTowards(door_parent.transform.rotation, yRotation, Time.deltaTime * 50);
             }
         }
     }
