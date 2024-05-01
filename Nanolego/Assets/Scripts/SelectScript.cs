@@ -21,6 +21,10 @@ public class SelectScript : MonoBehaviour
 
     private List<Transform> objectsOnZone;
 
+    // Puerta
+    private bool door = false;
+    private Transform door_parent;
+
     private void Start()
     {
         objectsOnZone = new List<Transform>();
@@ -32,24 +36,49 @@ public class SelectScript : MonoBehaviour
 
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
+            if (Input.GetKeyDown(KeyCode.F) && door)
+            {
+                door = false;
+            }
+
+
             if (hit.transform.tag != "Player")
                 mirilla.position = hit.point;
-            if (hit.transform.tag == pickableTag)
+            if (hit.transform.tag == "Door")
             {
                 if (Input.GetKeyDown(KeyCode.F))
                 {
-                    ob = hit.transform;
-                    objectSelected = true;
+                    door_parent = hit.transform.parent;
+                    door = true;
                 }
             }
         }
 
-        if (!objectSelected)
+        if (door_parent != null)
+            Debug.Log(Vector3.Angle(door_parent.position, transform.position));
+
+        if (!objectSelected && !door)
             return;
 
+        if (objectSelected && ob != null)
+        {
+            ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
+            ob.rotation = transform.rotation;
+        }
+        else if (door)
+        {
+            Vector3 dir = -door_parent.transform.GetChild(0).transform.position + transform.position;
+            dir.y = 0;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
 
-        ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
-        ob.rotation = transform.rotation;
+            Quaternion a = new Quaternion(lookRotation.x / 2, lookRotation.y / 2, lookRotation.z / 2, lookRotation.w / 2);
+
+
+            if (Quaternion.Angle(door_parent.transform.rotation, lookRotation) > 90)
+            {
+                door_parent.transform.rotation = Quaternion.RotateTowards(door_parent.transform.rotation, lookRotation, Time.deltaTime * 50);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -77,6 +106,11 @@ public class SelectScript : MonoBehaviour
                 objectSelected = false;
                 return;
             }
+            if (door)
+            {
+                door = false;
+                return;
+            }
             /*
             foreach (Transform t in objectsOnZone)
             {
@@ -100,16 +134,23 @@ public class SelectScript : MonoBehaviour
             {
                 name_text.text = hit.transform.name + ", " + hit.transform.tag;
 
-                if (hit.transform.tag != pickableTag || Vector3.Distance(transform.position, hit.transform.position) > range)
+                if ((hit.transform.tag != pickableTag && hit.transform.tag != "Door") || Vector3.Distance(transform.position, hit.transform.position) > range)
                     return;
 
                 name_text.text = hit.transform.name;
 
+                if (hit.transform.tag == pickableTag)
+                {
+                    hit.transform.GetComponent<Collider>().enabled = false;
+                    ob = hit.transform;
+                }
+                else if (hit.transform.tag == "Door")
+                {
+                    door_parent = hit.transform.parent;
+                    door = true;
+                }
+
                 objectSelected = true;
-
-                hit.transform.GetComponent<Collider>().enabled = false;
-
-                ob = hit.transform;
             }
         }
     }

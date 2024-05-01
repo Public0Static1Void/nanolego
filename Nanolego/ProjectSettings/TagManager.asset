@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Anchor
   - Pickable
+  - Door
   layers:
   - Default
   - TransparentFX
