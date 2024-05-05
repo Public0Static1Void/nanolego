@@ -25,6 +25,8 @@ public class SelectScript : MonoBehaviour
     private bool door = false;
     private Transform door_parent;
 
+    private bool wait = false;
+
     private void Start()
     {
         objectsOnZone = new List<Transform>();
@@ -38,7 +40,9 @@ public class SelectScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.F) && door)
             {
+                door_parent = null;
                 door = false;
+                StartCoroutine(WaitABit());
             }
 
 
@@ -46,7 +50,7 @@ public class SelectScript : MonoBehaviour
                 mirilla.position = hit.point;
             if (hit.transform.tag == "Door")
             {
-                if (Input.GetKeyDown(KeyCode.F))
+                if (Input.GetKeyDown(KeyCode.F) && !wait)
                 {
                     door_parent = hit.transform.parent;
                     door = true;
@@ -62,7 +66,7 @@ public class SelectScript : MonoBehaviour
             ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
             ob.rotation = transform.rotation;
         }
-        else if (door)
+        else if (door && door_parent != null)
         {
             Vector3 directionToPlayer = transform.position - door_parent.transform.position;
             directionToPlayer.y = 0f; // Ignore vertical component
@@ -105,6 +109,7 @@ public class SelectScript : MonoBehaviour
             }
             if (door)
             {
+                door_parent = null;
                 door = false;
                 return;
             }
@@ -141,15 +146,23 @@ public class SelectScript : MonoBehaviour
                     hit.transform.GetComponent<Collider>().enabled = false;
                     ob = hit.transform;
                 }
-                else if (hit.transform.tag == "Door")
+                else if (hit.transform.tag == "Door" && !wait)
                 {
-                    door_parent = hit.transform.parent;
+                    door_parent = hit.transform;
                     door = true;
+                    StartCoroutine(WaitABit());
                 }
 
                 objectSelected = true;
             }
         }
+    }
+
+    private IEnumerator WaitABit()
+    {
+        wait = true;
+        yield return new WaitForSeconds(0.2f);
+        wait = false;
     }
 
     /*private void OnDrawGizmos()

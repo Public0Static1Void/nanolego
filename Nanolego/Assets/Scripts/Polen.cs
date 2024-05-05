@@ -6,11 +6,12 @@ public class Polen : MonoBehaviour
 {
 
     public GameObject objetoACrear;
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if(collision.collider.tag == "pincel")
+        if(collision.tag == "Pickable")
         {
-            Instantiate(objetoACrear, transform.position, Quaternion.identity);
+            Debug.Log("a");
+            Instantiate(objetoACrear, transform);
         }
     }
 }
