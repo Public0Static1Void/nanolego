@@ -11,7 +11,7 @@ public class Polen : MonoBehaviour
         if(collision.tag == "Pickable")
         {
             Debug.Log("a");
-            Instantiate(objetoACrear, transform);
+            Instantiate(objetoACrear);
         }
     }
 }

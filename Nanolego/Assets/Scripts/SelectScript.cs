@@ -165,6 +165,7 @@ public class SelectScript : MonoBehaviour
         wait = false;
     }
 
+
     /*private void OnDrawGizmos()
     {
         if (Selection.activeObject == this.gameObject)
