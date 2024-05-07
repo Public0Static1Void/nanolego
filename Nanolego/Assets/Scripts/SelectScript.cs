@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class SelectScript : MonoBehaviour
@@ -48,38 +49,17 @@ public class SelectScript : MonoBehaviour
 
             if (hit.transform.tag != "Player")
                 mirilla.position = hit.point;
-            if (hit.transform.tag == "Door")
+            if (hit.transform.tag == "Button" && Input.GetKey(KeyCode.F))
             {
-                if (Input.GetKeyDown(KeyCode.F) && !wait)
-                {
-                    door_parent = hit.transform.parent;
-                    door = true;
-                }
+                Button bt = hit.transform.GetComponent<Button>();
+                bt.onClick.Invoke();
             }
+
         }
 
-        if (!objectSelected && !door)
+        if (!objectSelected)
             return;
 
-        if (objectSelected && ob != null)
-        {
-            ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
-            ob.rotation = transform.rotation;
-        }
-        else if (door && door_parent != null)
-        {
-            Vector3 directionToPlayer = transform.position - door_parent.transform.position;
-            directionToPlayer.y = 0f; // Ignore vertical component
-
-            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-
-            Quaternion yRotation = Quaternion.Euler(door_parent.transform.rotation.eulerAngles.x, targetRotation.eulerAngles.y / 2 - 10f, door_parent.transform.rotation.eulerAngles.z);
-
-            if (Quaternion.Angle(door_parent.transform.rotation, yRotation) > 0.1f)
-            {
-                door_parent.transform.rotation = Quaternion.RotateTowards(door_parent.transform.rotation, yRotation, Time.deltaTime * 50);
-            }
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -107,12 +87,7 @@ public class SelectScript : MonoBehaviour
                 objectSelected = false;
                 return;
             }
-            if (door)
-            {
-                door_parent = null;
-                door = false;
-                return;
-            }
+
             /*
             foreach (Transform t in objectsOnZone)
             {
@@ -146,11 +121,10 @@ public class SelectScript : MonoBehaviour
                     hit.transform.GetComponent<Collider>().enabled = false;
                     ob = hit.transform;
                 }
-                else if (hit.transform.tag == "Door" && !wait)
+                else if (hit.transform.tag == "Button")
                 {
-                    door_parent = hit.transform;
-                    door = true;
-                    StartCoroutine(WaitABit());
+                    Button bt = hit.transform.GetComponent<Button>();
+                    bt.onClick.Invoke();
                 }
 
                 objectSelected = true;

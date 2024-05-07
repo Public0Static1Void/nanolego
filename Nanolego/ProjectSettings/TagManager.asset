@@ -8,6 +8,7 @@ TagManager:
   - Pickable
   - Door
   - Pincel
+  - Button
   layers:
   - Default
   - TransparentFX

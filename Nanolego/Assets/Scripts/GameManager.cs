@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Animator anim;
 
     public int dir;
+
+    [SerializeField] private GameObject fade_ob;
+    private bool fade;
     public static GameManager Instance { private set; get; }
     void Awake()
     {
@@ -26,5 +30,20 @@ public class GameManager : MonoBehaviour
     public void ChangeRotation(bool open)
     {
         anim.SetBool("open", open);
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        if (fade_ob != null)
+        {
+            Material m = fade_ob.GetComponent<MeshRenderer>().material;
+            StartCoroutine(ChangeColor(m));
+        }
+        SceneManager.LoadScene(sceneName);
+    }
+    private IEnumerator ChangeColor(Material m)
+    {
+        m.color = new Color(m.color.r, m.color.g, m.color.b, m.color.a + Time.deltaTime);
+        yield return new WaitForSeconds(3);
     }
 }
