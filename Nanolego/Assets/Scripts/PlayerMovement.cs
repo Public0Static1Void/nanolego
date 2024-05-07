@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
 
         Vector3 moveDirection = Vector3.ProjectOnPlane(main_camera.transform.forward, Vector3.up).normalized;
-        Vector3 moveVector = moveDirection * yInput * speed;
+        Vector3 moveVector = moveDirection * yInput * speed * Time.deltaTime;
         rb.MovePosition(transform.position + moveVector);
 
         transform.Rotate(transform.up * xInput * turn_speed);

@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject fade_ob;
     private bool fade;
+
+    private AudioSource audioSource;
     public static GameManager Instance { private set; get; }
     void Awake()
     {
@@ -37,13 +39,20 @@ public class GameManager : MonoBehaviour
         if (fade_ob != null)
         {
             Material m = fade_ob.GetComponent<MeshRenderer>().material;
-            StartCoroutine(ChangeColor(m));
+            StartCoroutine(ChangeColor(m, sceneName));
         }
-        SceneManager.LoadScene(sceneName);
+        else
+            SceneManager.LoadScene(sceneName);
     }
-    private IEnumerator ChangeColor(Material m)
+    private IEnumerator ChangeColor(Material m, string sceneName)
     {
         m.color = new Color(m.color.r, m.color.g, m.color.b, m.color.a + Time.deltaTime);
         yield return new WaitForSeconds(3);
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void PlayClip(AudioClip clip)
+    {
+
     }
 }
