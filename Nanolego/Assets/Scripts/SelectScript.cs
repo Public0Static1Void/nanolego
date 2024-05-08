@@ -35,15 +35,40 @@ public class SelectScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (objectSelected && Input.GetKeyDown(KeyCode.F))
+        {
+            ob.GetComponent<Collider>().enabled = true;
+            if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
+            {
+                rb.useGravity = true;
+            }
+            objectSelected = false;
+            return;
+        }
         RaycastHit hit;
 
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            if (Input.GetKeyDown(KeyCode.F) && door)
+            if (objectSelected && Input.GetKeyDown(KeyCode.F) && hit.transform.tag == "Pickable")
             {
-                door_parent = null;
-                door = false;
-                StartCoroutine(WaitABit());
+                ob.GetComponent<Collider>().enabled = true;
+                if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                {
+                    rb.useGravity = true;
+                }
+                objectSelected = false;
+                return;
+            }
+            else if (Input.GetKeyDown(KeyCode.F) && hit.transform.tag == "Pickable")
+            {
+                hit.transform.GetComponent<Collider>().enabled = false;
+                ob = hit.transform;
+
+                if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                {
+                    rb.useGravity = false;
+                }
+                objectSelected = true;
             }
 
 
@@ -60,6 +85,11 @@ public class SelectScript : MonoBehaviour
         if (!objectSelected)
             return;
 
+        if (ob != null)
+        {
+            ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
+            ob.rotation = transform.rotation;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -84,6 +114,10 @@ public class SelectScript : MonoBehaviour
             if (objectSelected)
             {
                 ob.GetComponent<Collider>().enabled = true;
+                if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                {
+                    rb.useGravity = true;
+                }
                 objectSelected = false;
                 return;
             }
@@ -111,23 +145,28 @@ public class SelectScript : MonoBehaviour
             {
                 name_text.text = hit.transform.name + ", " + hit.transform.tag;
 
-                if ((hit.transform.tag != pickableTag && hit.transform.tag != "Door") || Vector3.Distance(transform.position, hit.transform.position) > range)
+                if ((hit.transform.tag != pickableTag && hit.transform.tag != "Button") || Vector3.Distance(transform.position, hit.transform.position) > range)
                     return;
 
                 name_text.text = hit.transform.name;
 
                 if (hit.transform.tag == pickableTag)
                 {
-                    hit.transform.GetComponent<Collider>().enabled = false;
                     ob = hit.transform;
+
+                    hit.transform.GetComponent<Collider>().enabled = false;
+                    if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                    {
+                        rb.useGravity = false;
+                    }
                 }
-                else if (hit.transform.tag == "Button")
+                if (hit.transform.tag == "Button")
                 {
                     Button bt = hit.transform.GetComponent<Button>();
                     bt.onClick.Invoke();
                 }
-
-                objectSelected = true;
+                else
+                    objectSelected = true;
             }
         }
     }

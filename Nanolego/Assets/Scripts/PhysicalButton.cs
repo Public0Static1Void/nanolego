@@ -30,7 +30,7 @@ public class PhysicalButton : MonoBehaviour
     {
         if (!touchingSomething && transform.position.y < max_y)
         {
-            rb.AddForce(transform.up * 5, ForceMode.Force);
+            rb.AddForce(transform.forward * 5, ForceMode.Force);
         }
         else if (transform.position.y > max_y)
             transform.position = new Vector3(transform.position.x, max_y, transform.position.z);
@@ -40,15 +40,22 @@ public class PhysicalButton : MonoBehaviour
             programable_event.Invoke();
             transform.position = new Vector3(transform.position.x, min_y, transform.position.z);
         }
+
+        if (touchingSomething && transform.position.y > min_y)
+            rb.AddForce(-transform.forward * 2, ForceMode.Force);
+
         transform.position = new Vector3(max_x, transform.position.y, max_z);
     }
 
-    private void OnCollisionEnter(Collision coll)
+    private void OnTriggerEnter(Collider coll)
     {
+        Debug.Log("a");
         touchingSomething = true;
     }
-    private void OnCollisionExit(Collision coll)
+    private void OnTriggerExit(Collider coll)
     {
+        Debug.Log("b");
+
         touchingSomething = false;
     }
 }
