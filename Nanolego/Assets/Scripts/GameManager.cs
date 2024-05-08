@@ -29,6 +29,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (GameObject.Find("Player").TryGetComponent<AudioSource>(out AudioSource a))
+        {
+            audioSource = a;
+        }
+    }
+
+    public void SetAnim(Animator an)
+    {
+        anim = an;
+    }
     public void ChangeRotation(bool open)
     {
         anim.SetBool("open", open);
@@ -53,6 +65,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayClip(AudioClip clip)
     {
-
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 }

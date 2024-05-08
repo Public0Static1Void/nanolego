@@ -7,7 +7,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(BoxCollider))]
 public class PhysicalButton : MonoBehaviour
 {
-    public float max_y, min_y;
+    public float max_y, min_y, max_x, max_z, min_z;
 
     private Rigidbody rb;
 
@@ -21,7 +21,9 @@ public class PhysicalButton : MonoBehaviour
         rb.useGravity = false;
 
         max_y = transform.position.y;
-        min_y = transform.position.y - transform.localScale.y / 2;
+        min_y = transform.position.y - 0.08f;
+        max_x = transform.position.x;
+        max_z = transform.position.z;
     }
 
     void FixedUpdate()
@@ -38,6 +40,7 @@ public class PhysicalButton : MonoBehaviour
             programable_event.Invoke();
             transform.position = new Vector3(transform.position.x, min_y, transform.position.z);
         }
+        transform.position = new Vector3(max_x, transform.position.y, max_z);
     }
 
     private void OnCollisionEnter(Collision coll)
