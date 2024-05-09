@@ -87,7 +87,7 @@ public class SelectScript : MonoBehaviour
 
         if (ob != null)
         {
-            ob.position = Vector3.Lerp(ob.position, transform.position, Time.deltaTime);
+            ob.position = Vector3.Lerp(ob.position, transform.position + transform.forward, Time.deltaTime);
             ob.rotation = transform.rotation;
         }
     }

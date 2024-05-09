@@ -19,6 +19,7 @@ public class PhysicalButton : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
+        GetComponent<BoxCollider>().isTrigger = true;
 
         max_y = transform.position.y;
         min_y = transform.position.y - 0.08f;
@@ -30,11 +31,35 @@ public class PhysicalButton : MonoBehaviour
     {
         if (!touchingSomething && transform.position.y < max_y)
         {
-            rb.AddForce(transform.forward * 5, ForceMode.Force);
+            rb.AddForce(transform.forward * 1.2f, ForceMode.Force);
+        }
+        if (touchingSomething && transform.position.y > min_y)
+        {
+            rb.AddForce(-transform.forward * 1.05f, ForceMode.Force);
+        }
+        if (transform.position.y <= min_y)
+        {
+            programable_event.Invoke();   
+        }
+        if (transform.position.y < min_y)
+        {
+            rb.velocity = Vector3.zero;
+            transform.position = new Vector3(max_z, min_y, max_z);
+        }
+        if (transform.position.y > max_y)
+        {
+            rb.velocity = Vector3.zero;
+            transform.position = new Vector3(max_z, max_y, max_z);
+        }
+        /*
+        if (!touchingSomething && transform.position.y < max_y)
+        {
+            transform.Translate(transform.forward * Time.deltaTime);
+            //rb.AddForce(transform.forward * 5, ForceMode.Force);
         }
         else if (transform.position.y > max_y)
             transform.position = new Vector3(transform.position.x, max_y, transform.position.z);
-        else if (transform.position.y < min_y)
+        else if (transform.position.y <= min_y)
         {
             Debug.Log("A");
             programable_event.Invoke();
@@ -42,7 +67,7 @@ public class PhysicalButton : MonoBehaviour
         }
 
         if (touchingSomething && transform.position.y > min_y)
-            rb.AddForce(-transform.forward * 2, ForceMode.Force);
+            rb.AddForce(-transform.forward * 1.3f, ForceMode.Force);*/
 
         transform.position = new Vector3(max_x, transform.position.y, max_z);
     }
