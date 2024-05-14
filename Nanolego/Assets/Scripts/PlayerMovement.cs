@@ -39,7 +39,10 @@ public class PlayerMovement : MonoBehaviour
         float yInput = Input.GetAxis("Vertical");
 
         if (xInput == 0 && yInput == 0)
+        {
             rb.angularVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
+        }
 
         Vector3 moveDirection = Vector3.ProjectOnPlane(main_camera.transform.forward, Vector3.up).normalized;
         Vector3 moveVector = moveDirection * yInput * speed * Time.deltaTime;
