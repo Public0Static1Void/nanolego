@@ -145,7 +145,7 @@ public class SelectScript : MonoBehaviour
             {
                 name_text.text = hit.transform.name + ", " + hit.transform.tag;
 
-                if ((hit.transform.tag != pickableTag && hit.transform.tag != "Button") || Vector3.Distance(transform.position, hit.transform.position) > range)
+                if (((hit.transform.tag != pickableTag || hit.transform.tag == "Platillo") && hit.transform.tag != "Button") || Vector3.Distance(transform.position, hit.transform.position) > range)
                     return;
 
                 name_text.text = hit.transform.name;

@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveVector = moveDirection * yInput * speed * Time.deltaTime;
         rb.MovePosition(transform.position + moveVector);
 
-        transform.Rotate(transform.up * xInput * turn_speed);
+        //Camera.main.transform.Rotate(Vector3.up * xInput * turn_speed);
     }
     public void Move(InputAction.CallbackContext con)
     {
