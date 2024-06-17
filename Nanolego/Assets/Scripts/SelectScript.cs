@@ -22,6 +22,9 @@ public class SelectScript : MonoBehaviour
 
     private List<Transform> objectsOnZone;
 
+    private Vector3 rot_offset;
+    private float dis = 1;
+
     // Puerta
     private bool door = false;
     private Transform door_parent;
@@ -82,13 +85,14 @@ public class SelectScript : MonoBehaviour
 
         }
 
-        if (!objectSelected)
+        if (!objectSelected) // ----------------------------------------------------------------------------
             return;
 
         if (ob != null)
         {
-            ob.position = Vector3.Lerp(ob.position, transform.position + transform.forward, Time.deltaTime);
-            ob.rotation = transform.rotation;
+            ob.position = Vector3.Lerp(ob.position, transform.position + transform.forward * dis, Time.deltaTime);
+            Quaternion q = new Quaternion(transform.rotation.x + rot_offset.x, transform.rotation.y + rot_offset.y, transform.rotation.z + rot_offset.z, transform.rotation.w);
+            ob.rotation = q;
         }
     }
 
@@ -158,6 +162,17 @@ public class SelectScript : MonoBehaviour
                     if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
                     {
                         rb.useGravity = false;
+                    }
+
+                    if (ob.TryGetComponent<SelectRotation>(out SelectRotation sr)) // Aplica un offset a la rotación del objeto
+                    {
+                        rot_offset = sr.rotation;
+                        dis = sr.distance;
+                    }
+                    else
+                    {
+                        rot_offset = Vector3.zero;
+                        dis = 1;
                     }
                 }
                 if (hit.transform.tag == "Button")
