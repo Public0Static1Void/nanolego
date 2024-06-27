@@ -52,47 +52,50 @@ public class SelectScript : MonoBehaviour
 
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            if (objectSelected && Input.GetKeyDown(KeyCode.F) && hit.transform.tag == "Pickable")
-            {
-                ob.GetComponent<Collider>().enabled = true;
-                if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
-                {
-                    rb.useGravity = true;
-                }
-                objectSelected = false;
+            name_text.text = hit.transform.name + ", " + hit.transform.tag;
+
+            if (((hit.transform.tag != pickableTag || hit.transform.tag == "Platillo") && hit.transform.tag != "Button") || Vector3.Distance(transform.position, hit.transform.position) > range)
                 return;
-            }
-            else if (Input.GetKeyDown(KeyCode.F) && hit.transform.tag == "Pickable")
+
+            name_text.text = hit.transform.name;
+
+            if (hit.transform.tag == pickableTag)
             {
-                hit.transform.GetComponent<Collider>().enabled = false;
                 ob = hit.transform;
 
+                hit.transform.GetComponent<Collider>().enabled = false;
                 if (ob.TryGetComponent<Rigidbody>(out Rigidbody rb))
                 {
                     rb.useGravity = false;
                 }
-                objectSelected = true;
+
+                if (ob.TryGetComponent<SelectRotation>(out SelectRotation sr)) // Aplica un offset a la rotación del objeto
+                {
+                    rot_offset = sr.rotation;
+                    dis = sr.distance;
+                }
+                else
+                {
+                    rot_offset = Vector3.zero;
+                    dis = 1;
+                }
             }
-
-
-            if (hit.transform.tag != "Player")
-                mirilla.position = hit.point;
-            if (hit.transform.tag == "Button" && Input.GetKey(KeyCode.F))
+            if (hit.transform.tag == "Button")
             {
                 Button bt = hit.transform.GetComponent<Button>();
                 bt.onClick.Invoke();
             }
-
+            else
+                objectSelected = true;
         }
-
         if (!objectSelected) // ----------------------------------------------------------------------------
             return;
 
         if (ob != null)
         {
             ob.position = Vector3.Lerp(ob.position, transform.position + transform.forward * dis, Time.deltaTime);
-            Quaternion q = new Quaternion(transform.rotation.x + rot_offset.x, transform.rotation.y + rot_offset.y, transform.rotation.z + rot_offset.z, transform.rotation.w);
-            ob.rotation = q;
+            if (rot_offset.x == 0)
+                ob.rotation = transform.rotation;
         }
     }
 
